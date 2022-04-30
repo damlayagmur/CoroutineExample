@@ -37,6 +37,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
         Log.d(TAG, "Hello from thread ${Thread.currentThread().name}")
+
+        Log.d(TAG, "Before runBlocking")
+        runBlocking {
+            launch (Dispatchers.IO){
+                delay(3000L)
+                Log.d(TAG, "Finished IO Coroutine 1")
+            }
+            launch (Dispatchers.IO){
+                delay(6000L)
+                Log.d(TAG, "Finished IO Coroutine 2")
+            }
+            Log.d(TAG, "Start runBlocking")
+            delay(100L)
+            Log.d(TAG, "End runBlocking")
+        }
+        Log.d(TAG, "After runBlocking")
     }
 
     private suspend fun doNetworkCall(): String {
