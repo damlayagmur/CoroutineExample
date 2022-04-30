@@ -29,10 +29,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         GlobalScope.launch(Dispatchers.IO) {
-            Log.d(TAG,"Starting coroutine in thread ${Thread.currentThread().name}")
+            Log.d(TAG, "Starting coroutine in thread ${Thread.currentThread().name}")
             val answer = doNetworkCall()
             withContext(Dispatchers.Main) {
-                Log.d(TAG,"Setting text in thread ${Thread.currentThread().name}")
+                Log.d(TAG, "Setting text in thread ${Thread.currentThread().name}")
                 tvDummy.text = answer
             }
         }
@@ -40,11 +40,11 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "Before runBlocking")
         runBlocking {
-            launch (Dispatchers.IO){
+            launch(Dispatchers.IO) {
                 delay(3000L)
                 Log.d(TAG, "Finished IO Coroutine 1")
             }
-            launch (Dispatchers.IO){
+            launch(Dispatchers.IO) {
                 delay(6000L)
                 Log.d(TAG, "Finished IO Coroutine 2")
             }
