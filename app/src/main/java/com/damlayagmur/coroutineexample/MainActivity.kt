@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import kotlinx.coroutines.*
+import kotlin.system.measureTimeMillis
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +18,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         tvDummy = findViewById(R.id.tvDummy)
 
-        val job = GlobalScope.launch(Dispatchers.Default) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val time = measureTimeMillis {
+                var networkCallAnswer = async { doNetworkCall() }
+                var networkCallAnswer2 = async { doNetworkCall2() }
+
+                Log.d(TAG, "Answer1 is ${networkCallAnswer.await()}")
+                Log.d(TAG, "Answer2 is ${networkCallAnswer2.await()}")
+            }
+            Log.d(TAG, "Requests took $time ms")
+        }
+
+
+        /*val job = GlobalScope.launch(Dispatchers.Default) {
             repeat(5){
                 Log.d(TAG, "Coroutines is still working...")
                 delay(1000L)
@@ -64,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             delay(100L)
             Log.d(TAG, "End runBlocking")
         }
-        Log.d(TAG, "After runBlocking")
+        Log.d(TAG, "After runBlocking")*/
     }
 
     private suspend fun doNetworkCall(): String {
