@@ -1,9 +1,12 @@
 package com.damlayagmur.coroutineexample
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.*
 import kotlin.system.measureTimeMillis
 
@@ -11,14 +14,32 @@ class MainActivity : AppCompatActivity() {
 
     val TAG = "MainActivity"
     lateinit var tvDummy: TextView
+    lateinit var button: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         tvDummy = findViewById(R.id.tvDummy)
+        button = findViewById(R.id.btnStartActivity)
 
-        GlobalScope.launch(Dispatchers.IO) {
+        button.setOnClickListener {
+            lifecycleScope.launch {
+                while (true){
+                    delay(1000L)
+                    Log.d(TAG,"Still running...")
+                }
+            }
+            GlobalScope.launch {
+                delay(5000L)
+                Intent(this@MainActivity,SecondActivity::class.java).also{
+                    startActivity(it)
+                    finish()
+                }
+            }
+        }
+
+        /*GlobalScope.launch(Dispatchers.IO) {
             val time = measureTimeMillis {
                 var networkCallAnswer = async { doNetworkCall() }
                 var networkCallAnswer2 = async { doNetworkCall2() }
@@ -27,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "Answer2 is ${networkCallAnswer2.await()}")
             }
             Log.d(TAG, "Requests took $time ms")
-        }
+        }*/
 
 
         /*val job = GlobalScope.launch(Dispatchers.Default) {
