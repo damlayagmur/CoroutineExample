@@ -17,6 +17,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         tvDummy = findViewById(R.id.tvDummy)
 
+        val job = GlobalScope.launch(Dispatchers.Default) {
+            repeat(5){
+                Log.d(TAG, "Coroutines is still working...")
+                delay(1000L)
+            }
+        }
+
+        runBlocking {
+            job.join()
+            Log.d(TAG, "Main Thread is continuing...")
+        }
+
 
         GlobalScope.launch {
             val networkCallAnswer = doNetworkCall()
